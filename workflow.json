@@ -1,0 +1,273 @@
+{
+  "name": "Kundenanfragen – Fiktive Kosmetikmarke",
+  "nodes": [
+    {
+      "parameters": {
+        "formTitle": "Kundenanfrage",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "Kategorie",
+              "fieldType": "dropdown",
+              "fieldOptions": {
+                "values": [
+                  {
+                    "option": "Produktfrage"
+                  },
+                  {
+                    "option": "Bestellung "
+                  },
+                  {
+                    "option": "Reklamation"
+                  }
+                ]
+              },
+              "requiredField": true
+            },
+            {
+              "fieldLabel": "Nachricht",
+              "fieldType": "textarea",
+              "requiredField": true
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.6,
+      "position": [
+        0,
+        0
+      ],
+      "id": "1a2d470f-434b-4d41-9570-1d8472de441c",
+      "name": "On form submission",
+      "webhookId": "89639961-ddb6-4755-ba50-1d2e9604e0a0"
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.Kategorie }}",
+                    "rightValue": "Produktfrage",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "822f32c2-9ebe-4ebe-87b6-72527361db60"
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "id": "2f592452-17fe-4694-93c8-5365c8e5325a",
+                    "leftValue": "={{ $json.Kategorie.trim() }}",
+                    "rightValue": "Bestellung",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 4
+                },
+                "conditions": [
+                  {
+                    "id": "207152ac-29e4-4537-921d-7583400194d2",
+                    "leftValue": "={{ $json.Kategorie }}",
+                    "rightValue": "Reklamation",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals",
+                      "name": "filter.operator.equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.5,
+      "position": [
+        224,
+        0
+      ],
+      "id": "a75ebfb2-6e73-4bd8-a73e-8fdbeb4ee31d",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e6a6130c-e58c-43ff-b627-906e363819c6",
+              "name": "Status",
+              "value": "Entwurf erstellt",
+              "type": "string"
+            },
+            {
+              "id": "151da04e-d6ed-4af0-91b5-a4725ee185c0",
+              "name": "Antwortentwurf",
+              "value": "Vielen Dank für Ihre Nachricht. Bitte teilen Sie uns Ihre Bestellnummer mit, damit wir den Status Ihrer Bestellung prüfen können.",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        448,
+        0
+      ],
+      "id": "63944f0c-6671-4390-87d8-7ad0dd2f64f3",
+      "name": "Bestellung"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "d112bc07-e348-4c45-8927-cbc40e3c7358",
+              "name": "Status",
+              "value": "Entwurf erstellt",
+              "type": "string"
+            },
+            {
+              "id": "40bd87d8-5b2d-48e0-acec-576ecc82aafa",
+              "name": "Antwortentwurf",
+              "value": "Vielen Dank für Ihre Produktfrage. Bitte teilen Sie uns den genauen Produktnamen mit, damit wir die Inhaltsstoffe prüfen können.",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        448,
+        -160
+      ],
+      "id": "59953b40-d4e9-49c1-ab77-e57897a0cf2c",
+      "name": "Produktfrage"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e23ac8b2-aeb0-40ff-bf07-bd0a3569bb9d",
+              "name": "Status",
+              "value": "Manuelle Prüfung erforderlich",
+              "type": "string"
+            },
+            {
+              "id": "ed5cdce7-aaee-495d-bfa8-93fc629c0ab5",
+              "name": "Antwortentwurf",
+              "value": "Vielen Dank für Ihre Nachricht. Unser Kundenservice prüft Ihre Reklamation und meldet sich bei Ihnen.",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        448,
+        160
+      ],
+      "id": "6ae2f723-f95f-4648-8df2-7ae07f5687b7",
+      "name": "Reklamation "
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Produktfrage",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Bestellung",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Reklamation ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "97fab5ba-6a98-4318-a478-08f5c5d63247",
+  "meta": {
+    "instanceId": "a29e72ca0de6de761425a7c346343e540ca40fa778644ac7aba0c8584b100a54"
+  },
+  "nodeGroups": [],
+  "id": "z8ipV3jnuiqqn6hB",
+  "tags": []
+}
