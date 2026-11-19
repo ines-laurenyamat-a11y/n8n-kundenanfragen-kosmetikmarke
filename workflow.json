@@ -217,6 +217,218 @@
       ],
       "id": "6ae2f723-f95f-4648-8df2-7ae07f5687b7",
       "name": "Reklamation "
+    },
+    {
+      "parameters": {
+        "mode": "load",
+        "memoryKey": {
+          "__rl": true,
+          "mode": "list",
+          "value": "vector_store_key"
+        },
+        "prompt": "={{ $json.Nachricht }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.4,
+      "position": [
+        672,
+        -160
+      ],
+      "id": "37fbc487-2517-4dcc-8d6b-6d0b7b380aef",
+      "name": "Simple Vector Store"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        768,
+        48
+      ],
+      "id": "959b1a2b-ac0e-4672-ba54-e67714c6f3d9",
+      "name": "Embeddings OpenAI",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "memoryKey": {
+          "__rl": true,
+          "mode": "list",
+          "value": "vector_store_key"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreInMemory",
+      "typeVersion": 1.4,
+      "position": [
+        1120,
+        -160
+      ],
+      "id": "d2f1c94d-f64a-4b09-8f88-6de4c9694562",
+      "name": "Simple Vector Store1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        944,
+        64
+      ],
+      "id": "f6073e80-dd0b-4356-826c-ebba9798f725",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1136,
+        80
+      ],
+      "id": "01cdc611-a935-489d-be6b-e72fafc7f6b4",
+      "name": "Embeddings OpenAI1",
+      "credentials": {
+        "openAiApi": {
+          "id": null,
+          "name": "",
+          "__aiGatewayManaged": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsonMode": "expressionData",
+        "jsonData": "Produkt-FAQ – Fiktive Kosmetikmarke\n\nWie verwende ich das Vitamin-C-Serum?\nNach der Gesichtsreinigung zwei bis drei Tropfen auf das Gesicht auftragen. Anschließend die Gesichtscreme verwenden.\n\nWie viel Vitamin-C-Serum enthält eine Flasche?\nEine Flasche enthält 30 ml.\n\nWie bewahre ich das Vitamin-C-Serum auf?\nDie Flasche nach Gebrauch gut verschließen und vor direkter Sonneneinstrahlung schützen.",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "typeVersion": 1.1,
+      "position": [
+        1312,
+        80
+      ],
+      "id": "7e5fe36f-3d98-4fa8-bde0-01a9eaddc707",
+      "name": "Default Data Loader"
+    },
+    {
+      "parameters": {
+        "operation": "sendAndWait",
+        "sendTo": "ines-laure.nyamat@student.smartfuturecampus.de",
+        "subject": "Freigabe erforderlich – Reklamation",
+        "message": "={{ $json.Antwortentwurf }}",
+        "approvalOptions": {
+          "values": {
+            "approvalType": "double"
+          }
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        608,
+        368
+      ],
+      "id": "9c55b556-5138-484c-aa68-8dddf167294b",
+      "name": "Send message and wait for response",
+      "webhookId": "82913d94-1d48-44e8-a56c-5d1683c29ddd",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "b7vAMHhkwgi74gCy",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 4
+          },
+          "conditions": [
+            {
+              "id": "1a673b88-1c9b-4dfd-b587-d44e4a306b85",
+              "leftValue": "={{ $json.data.approved }}",
+              "rightValue": "",
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.4,
+      "position": [
+        832,
+        368
+      ],
+      "id": "b686e065-aed5-4b8c-98a8-3ead5c0ad414",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "6658750c-5fc0-4aec-8709-e84fd189d6ee",
+              "name": "Status",
+              "value": "Bereit zum Versand ",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1056,
+        272
+      ],
+      "id": "a2e6388c-5a81-4e4d-8400-b7a20221597a",
+      "name": "Bereit zum Versand"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c629fbcd-ee3d-4a36-8b33-8256de79f471",
+              "name": "Status",
+              "value": "Manuelle Nachbearbeitung",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        1056,
+        464
+      ],
+      "id": "6408abc7-83e5-455f-aba9-fe05a1b15c55",
+      "name": "Manuelle Nachbearbeitung "
     }
   ],
   "pinData": {},
@@ -256,6 +468,101 @@
           }
         ]
       ]
+    },
+    "Produktfrage": {
+      "main": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Simple Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Simple Vector Store1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings OpenAI1": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Simple Vector Store1",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Simple Vector Store1",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Reklamation ": {
+      "main": [
+        [
+          {
+            "node": "Send message and wait for response",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send message and wait for response": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Bereit zum Versand",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Manuelle Nachbearbeitung ",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
@@ -263,8 +570,9 @@
     "executionOrder": "v1",
     "binaryMode": "separate"
   },
-  "versionId": "97fab5ba-6a98-4318-a478-08f5c5d63247",
+  "versionId": "c55f06df-dc43-47a6-8d8a-a385c2367b42",
   "meta": {
+    "templateCredsSetupCompleted": true,
     "instanceId": "a29e72ca0de6de761425a7c346343e540ca40fa778644ac7aba0c8584b100a54"
   },
   "nodeGroups": [],
